@@ -2,10 +2,26 @@
   function initRepeater($repeater) {
     var $rows = $repeater.find('.mno-pm-repeater__rows');
     var template = $repeater.find('.mno-pm-repeater__template').html();
+    var nextIndex = parseInt($repeater.attr('data-next-index'), 10);
+
+    if (isNaN(nextIndex)) {
+      nextIndex = $rows.children().length;
+    }
 
     $repeater.on('click', '.mno-pm-repeater__add', function (event) {
       event.preventDefault();
-      $rows.append(template);
+      if (!template) {
+        return;
+      }
+      var html = template;
+
+      if (html.indexOf('__index__') !== -1) {
+        html = html.replace(/__index__/g, nextIndex);
+        nextIndex += 1;
+        $repeater.attr('data-next-index', nextIndex);
+      }
+
+      $rows.append(html);
     });
 
     $repeater.on('click', '.mno-pm-repeater__remove', function (event) {
