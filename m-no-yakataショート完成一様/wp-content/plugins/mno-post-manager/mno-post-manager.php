@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MNO Post Manager
  * Description: Provides structured meta fields and front-end rendering for posts.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: OpenAI Assistant
  */
 
@@ -51,7 +51,7 @@ final class MNO_Post_Manager {
             'sale_end_date'  => '',
             'highlights'     => [],
             'track_list'     => [],
-            'sample_lines'   => [],
+            'quote_blocks'   => [],
             'release_date'   => '',
             'genre'          => '',
             'track_duration' => '',
@@ -73,7 +73,35 @@ final class MNO_Post_Manager {
         $data['illustrators'] = is_array( $data['illustrators'] ) ? array_map( 'sanitize_text_field', $data['illustrators'] ) : [];
         $data['highlights']   = is_array( $data['highlights'] ) ? array_map( 'sanitize_textarea_field', $data['highlights'] ) : [];
         $data['track_list']   = is_array( $data['track_list'] ) ? array_map( 'sanitize_text_field', $data['track_list'] ) : [];
-        $data['sample_lines'] = is_array( $data['sample_lines'] ) ? array_map( 'sanitize_textarea_field', $data['sample_lines'] ) : [];
+
+        if ( is_array( $data['quote_blocks'] ) ) {
+            $quote_blocks = [];
+            foreach ( $data['quote_blocks'] as $block ) {
+                if ( ! is_array( $block ) ) {
+                    continue;
+                }
+
+                $heading      = isset( $block['heading'] ) ? sanitize_text_field( $block['heading'] ) : '';
+                $free_field_1 = isset( $block['free_field_1'] ) ? sanitize_text_field( $block['free_field_1'] ) : '';
+                $free_field_2 = isset( $block['free_field_2'] ) ? sanitize_text_field( $block['free_field_2'] ) : '';
+                $quote        = isset( $block['quote'] ) ? sanitize_textarea_field( $block['quote'] ) : '';
+
+                if ( '' === $heading && '' === $free_field_1 && '' === $free_field_2 && '' === $quote ) {
+                    continue;
+                }
+
+                $quote_blocks[] = [
+                    'heading'       => $heading,
+                    'free_field_1'  => $free_field_1,
+                    'free_field_2'  => $free_field_2,
+                    'quote'         => $quote,
+                ];
+            }
+
+            $data['quote_blocks'] = $quote_blocks;
+        } else {
+            $data['quote_blocks'] = [];
+        }
 
         return wp_parse_args( $data, $defaults );
     }
@@ -146,11 +174,32 @@ final class MNO_Post_Manager {
         }
         update_post_meta( $post_id, self::META_PREFIX . 'track_list', $track_list );
 
-        $sample_lines = [];
-        if ( isset( $_POST['mno_pm_sample_lines'] ) && is_array( $_POST['mno_pm_sample_lines'] ) ) {
-            $sample_lines = array_values( array_filter( array_map( 'sanitize_textarea_field', wp_unslash( $_POST['mno_pm_sample_lines'] ) ) ) );
+        $quote_blocks = [];
+        if ( isset( $_POST['mno_pm_quote_blocks'] ) && is_array( $_POST['mno_pm_quote_blocks'] ) ) {
+            foreach ( wp_unslash( $_POST['mno_pm_quote_blocks'] ) as $block ) {
+                if ( ! is_array( $block ) ) {
+                    continue;
+                }
+
+                $heading      = isset( $block['heading'] ) ? sanitize_text_field( $block['heading'] ) : '';
+                $free_field_1 = isset( $block['free_field_1'] ) ? sanitize_text_field( $block['free_field_1'] ) : '';
+                $free_field_2 = isset( $block['free_field_2'] ) ? sanitize_text_field( $block['free_field_2'] ) : '';
+                $quote        = isset( $block['quote'] ) ? sanitize_textarea_field( $block['quote'] ) : '';
+
+                if ( '' === $heading && '' === $free_field_1 && '' === $free_field_2 && '' === $quote ) {
+                    continue;
+                }
+
+                $quote_blocks[] = [
+                    'heading'       => $heading,
+                    'free_field_1'  => $free_field_1,
+                    'free_field_2'  => $free_field_2,
+                    'quote'         => $quote,
+                ];
+            }
         }
-        update_post_meta( $post_id, self::META_PREFIX . 'sample_lines', $sample_lines );
+        update_post_meta( $post_id, self::META_PREFIX . 'quote_blocks', $quote_blocks );
+        delete_post_meta( $post_id, self::META_PREFIX . 'sample_lines' );
 
         $sale_price    = get_post_meta( $post_id, self::META_PREFIX . 'sale_price', true );
         $sale_end_date = get_post_meta( $post_id, self::META_PREFIX . 'sale_end_date', true );
@@ -191,9 +240,9 @@ final class MNO_Post_Manager {
         }
 
         wp_enqueue_media();
-        wp_enqueue_style( 'mno-pm-admin', plugin_dir_url( __FILE__ ) . 'assets/admin.css', [], '1.0.0' );
+        wp_enqueue_style( 'mno-pm-admin', plugin_dir_url( __FILE__ ) . 'assets/admin.css', [], '1.1.0' );
         wp_enqueue_script( 'jquery-ui-sortable' );
-        wp_enqueue_script( 'mno-pm-admin', plugin_dir_url( __FILE__ ) . 'assets/admin.js', [ 'jquery', 'jquery-ui-sortable' ], '1.0.0', true );
+        wp_enqueue_script( 'mno-pm-admin', plugin_dir_url( __FILE__ ) . 'assets/admin.js', [ 'jquery', 'jquery-ui-sortable' ], '1.1.0', true );
     }
 
     public static function enqueue_frontend_assets() {
@@ -201,7 +250,7 @@ final class MNO_Post_Manager {
             return;
         }
 
-        wp_enqueue_script( 'mno-pm-frontend', plugin_dir_url( __FILE__ ) . 'assets/frontend.js', [], '1.0.0', true );
+        wp_enqueue_script( 'mno-pm-frontend', plugin_dir_url( __FILE__ ) . 'assets/frontend.js', [], '1.1.0', true );
         wp_localize_script(
             'mno-pm-frontend',
             'mnoPmSlider',
