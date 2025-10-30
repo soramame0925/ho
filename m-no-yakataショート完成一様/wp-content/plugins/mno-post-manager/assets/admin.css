@@ -98,3 +98,35 @@
 .mno-pm-repeater--textarea .mno-pm-repeater__placeholder {
   height: 120px;
 }
+
+.mno-pm-script-blocks .mno-pm-repeater__rows {
+  gap: 12px;
+}
+
+.mno-pm-script-blocks .mno-pm-repeater__row {
+  align-items: stretch;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #dcdcde;
+  background: #f6f7f7;
+  border-radius: 6px;
+}
+
+.mno-pm-script-blocks .mno-pm-repeater__handle {
+  margin-top: 6px;
+}
+
+.mno-pm-script-blocks textarea.widefat {
+  min-height: 150px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.mno-pm-script-blocks__remove {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.mno-pm-script-blocks__add {
+  margin-top: 12px;
+}

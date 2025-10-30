@@ -51,7 +51,7 @@ final class MNO_Post_Manager {
             'sale_end_date'  => '',
             'highlights'     => [],
             'track_list'     => [],
-            'sample_lines'   => [],
+            'sample_lines_blocks' => [],
             'release_date'   => '',
             'genre'          => '',
             'track_duration' => '',
@@ -73,7 +73,35 @@ final class MNO_Post_Manager {
         $data['illustrators'] = is_array( $data['illustrators'] ) ? array_map( 'sanitize_text_field', $data['illustrators'] ) : [];
         $data['highlights']   = is_array( $data['highlights'] ) ? array_map( 'sanitize_textarea_field', $data['highlights'] ) : [];
         $data['track_list']   = is_array( $data['track_list'] ) ? array_map( 'sanitize_text_field', $data['track_list'] ) : [];
-        $data['sample_lines'] = is_array( $data['sample_lines'] ) ? array_map( 'sanitize_textarea_field', $data['sample_lines'] ) : [];
+        $data['sample_lines_blocks'] = is_array( $data['sample_lines_blocks'] )
+            ? array_map( 'sanitize_textarea_field', $data['sample_lines_blocks'] )
+            : [];
+        $data['sample_lines_blocks'] = array_values(
+            array_filter(
+                $data['sample_lines_blocks'],
+                static function ( $value ) {
+                    return '' !== $value;
+                }
+            )
+        );
+
+        if ( empty( $data['sample_lines_blocks'] ) ) {
+            $legacy_sample_lines = get_post_meta( $post_id, self::META_PREFIX . 'sample_lines', true );
+            if ( is_array( $legacy_sample_lines ) ) {
+                $legacy_sample_lines = array_map( 'sanitize_textarea_field', $legacy_sample_lines );
+                $legacy_sample_lines = array_values(
+                    array_filter(
+                        $legacy_sample_lines,
+                        static function ( $value ) {
+                            return '' !== $value;
+                        }
+                    )
+                );
+                $data['sample_lines_blocks'] = $legacy_sample_lines;
+            } elseif ( is_string( $legacy_sample_lines ) && '' !== $legacy_sample_lines ) {
+                $data['sample_lines_blocks'] = [ sanitize_textarea_field( $legacy_sample_lines ) ];
+            }
+        }
 
         return wp_parse_args( $data, $defaults );
     }
@@ -146,11 +174,21 @@ final class MNO_Post_Manager {
         }
         update_post_meta( $post_id, self::META_PREFIX . 'track_list', $track_list );
 
-        $sample_lines = [];
-        if ( isset( $_POST['mno_pm_sample_lines'] ) && is_array( $_POST['mno_pm_sample_lines'] ) ) {
-            $sample_lines = array_values( array_filter( array_map( 'sanitize_textarea_field', wp_unslash( $_POST['mno_pm_sample_lines'] ) ) ) );
+        $script_blocks = [];
+        if ( isset( $_POST['mno_pm_sample_lines_blocks'] ) && is_array( $_POST['mno_pm_sample_lines_blocks'] ) ) {
+            $raw_blocks   = wp_unslash( $_POST['mno_pm_sample_lines_blocks'] );
+            $script_blocks = array_map( 'sanitize_textarea_field', $raw_blocks );
+            $script_blocks = array_values(
+                array_filter(
+                    $script_blocks,
+                    static function ( $value ) {
+                        return '' !== $value;
+                    }
+                )
+            );
         }
-        update_post_meta( $post_id, self::META_PREFIX . 'sample_lines', $sample_lines );
+        update_post_meta( $post_id, self::META_PREFIX . 'sample_lines_blocks', $script_blocks );
+        delete_post_meta( $post_id, self::META_PREFIX . 'sample_lines' );
 
         $sale_price    = get_post_meta( $post_id, self::META_PREFIX . 'sale_price', true );
         $sale_end_date = get_post_meta( $post_id, self::META_PREFIX . 'sale_end_date', true );
