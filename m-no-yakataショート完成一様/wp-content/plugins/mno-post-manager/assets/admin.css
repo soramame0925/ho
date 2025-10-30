@@ -1,0 +1,100 @@
+.mno-pm-meta {
+  display: grid;
+  gap: 24px;
+}
+
+.mno-pm-meta__section {
+  background: #fff;
+  border: 1px solid #dcdcde;
+  padding: 16px;
+}
+
+.mno-pm-meta__section h3 {
+  margin-top: 0;
+}
+
+.mno-pm-meta__section--grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.mno-pm-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.mno-pm-gallery__item {
+  position: relative;
+  width: 120px;
+  border: 1px solid #dcdcde;
+  background: #f6f7f7;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.mno-pm-gallery__preview img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.mno-pm-gallery__remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  line-height: 1;
+  padding: 0 6px;
+}
+
+.mno-pm-gallery__handle {
+  cursor: move;
+  align-self: flex-start;
+}
+
+.mno-pm-gallery__placeholder {
+  border: 2px dashed #007cba;
+  width: 120px;
+  height: 120px;
+}
+
+.mno-pm-repeater__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mno-pm-repeater__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mno-pm-repeater__row textarea.widefat {
+  min-height: 80px;
+}
+
+.mno-pm-repeater__handle {
+  cursor: move;
+}
+
+.mno-pm-repeater__row .button {
+  flex-shrink: 0;
+}
+
+.mno-pm-repeater__row .widefat {
+  flex: 1;
+}
+
+.mno-pm-repeater__placeholder {
+  border: 2px dashed #007cba;
+  height: 48px;
+}
+
+.mno-pm-repeater--textarea .mno-pm-repeater__placeholder {
+  height: 120px;
+}
