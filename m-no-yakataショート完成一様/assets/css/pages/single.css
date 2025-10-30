@@ -240,29 +240,20 @@
   color: #111827;
 }
 
-.mno-script-blocks {
-  display: flex;
-  flex-direction: column;
-}
-
-.mno-script-block {
-  font-size: 14px;
-  line-height: 1.7;
-  color: #f1f1f1;
-  white-space: pre-line;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.mno-script-block:last-child {
-  margin-bottom: 0;
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.mno-script-block p {
+.mno-pm-quote {
   margin: 0;
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border-left: 4px solid #6366f1;
+  display: grid;
+  gap: 12px;
+}
+
+.mno-pm-quote p {
+  margin: 0;
+  line-height: 1.7;
+  font-size: 1rem;
 }
 
 @media (max-width: 768px) {
