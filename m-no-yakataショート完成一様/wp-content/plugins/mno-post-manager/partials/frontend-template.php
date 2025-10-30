@@ -10,7 +10,7 @@ $sale_price     = isset( $data['sale_price'] ) ? $data['sale_price'] : '';
 $sale_end_date  = isset( $data['sale_end_date'] ) ? $data['sale_end_date'] : '';
 $highlights     = ! empty( $data['highlights'] ) ? $data['highlights'] : [];
 $track_list     = ! empty( $data['track_list'] ) ? $data['track_list'] : [];
-$sample_lines   = ! empty( $data['sample_lines'] ) ? $data['sample_lines'] : [];
+$script_blocks  = ! empty( $data['sample_lines_blocks'] ) ? $data['sample_lines_blocks'] : [];
 $release_date   = isset( $data['release_date'] ) ? $data['release_date'] : '';
 $genre          = isset( $data['genre'] ) ? $data['genre'] : '';
 $track_duration = isset( $data['track_duration'] ) ? $data['track_duration'] : '';
@@ -141,12 +141,14 @@ if ( $buy_url ) {
 
     <section class="mno-pm-article__section">
         <h2>一部セリフ抜粋</h2>
-        <?php if ( $sample_lines ) : ?>
-            <blockquote class="mno-pm-quote">
-                <?php foreach ( $sample_lines as $line ) : ?>
-                    <p><?php echo nl2br( esc_html( $line ) ); ?></p>
+        <?php if ( $script_blocks ) : ?>
+            <div class="mno-script-blocks">
+                <?php foreach ( $script_blocks as $block ) : ?>
+                    <div class="mno-script-block">
+                        <p><?php echo nl2br( esc_html( $block ) ); ?></p>
+                    </div>
                 <?php endforeach; ?>
-            </blockquote>
+            </div>
         <?php else : ?>
             <p>&mdash;</p>
         <?php endif; ?>

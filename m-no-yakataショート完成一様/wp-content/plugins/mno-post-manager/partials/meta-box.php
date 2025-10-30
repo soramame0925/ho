@@ -177,14 +177,14 @@
 
     <section class="mno-pm-meta__section">
         <h3><?php esc_html_e( '一部セリフ抜粋', 'mno-post-manager' ); ?></h3>
-        <div class="mno-pm-repeater mno-pm-repeater--textarea" data-name="mno_pm_sample_lines">
+        <div class="mno-pm-script-blocks mno-pm-repeater mno-pm-repeater--textarea" data-name="mno_pm_sample_lines_blocks">
             <div class="mno-pm-repeater__rows">
-                <?php if ( ! empty( $values['sample_lines'] ) ) : ?>
-                    <?php foreach ( $values['sample_lines'] as $sample_line ) : ?>
+                <?php if ( ! empty( $values['sample_lines_blocks'] ) ) : ?>
+                    <?php foreach ( $values['sample_lines_blocks'] as $block ) : ?>
                         <div class="mno-pm-repeater__row">
                             <span class="dashicons dashicons-move mno-pm-repeater__handle" aria-hidden="true"></span>
-                            <textarea name="mno_pm_sample_lines[]" class="widefat" rows="3"><?php echo esc_textarea( $sample_line ); ?></textarea>
-                            <button type="button" class="button mno-pm-repeater__remove" aria-label="<?php esc_attr_e( '削除', 'mno-post-manager' ); ?>">&minus;</button>
+                            <textarea name="mno_pm_sample_lines_blocks[]" class="widefat" rows="7" placeholder="<?php esc_attr_e( 'ここに自由入力 (Enter any text)', 'mno-post-manager' ); ?>"><?php echo esc_textarea( $block ); ?></textarea>
+                            <button type="button" class="button mno-pm-repeater__remove mno-pm-script-blocks__remove" aria-label="<?php esc_attr_e( 'ブロックを削除', 'mno-post-manager' ); ?>">&minus;</button>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -192,11 +192,11 @@
             <script type="text/template" class="mno-pm-repeater__template">
                 <div class="mno-pm-repeater__row">
                     <span class="dashicons dashicons-move mno-pm-repeater__handle" aria-hidden="true"></span>
-                    <textarea name="mno_pm_sample_lines[]" class="widefat" rows="3"></textarea>
-                    <button type="button" class="button mno-pm-repeater__remove" aria-label="<?php esc_attr_e( '削除', 'mno-post-manager' ); ?>">&minus;</button>
+                    <textarea name="mno_pm_sample_lines_blocks[]" class="widefat" rows="7" placeholder="<?php esc_attr_e( 'ここに自由入力 (Enter any text)', 'mno-post-manager' ); ?>"></textarea>
+                    <button type="button" class="button mno-pm-repeater__remove mno-pm-script-blocks__remove" aria-label="<?php esc_attr_e( 'ブロックを削除', 'mno-post-manager' ); ?>">&minus;</button>
                 </div>
             </script>
-            <button type="button" class="button mno-pm-repeater__add"><?php esc_html_e( 'セリフを追加', 'mno-post-manager' ); ?></button>
+            <button type="button" class="button mno-pm-repeater__add mno-pm-script-blocks__add">＋ <?php esc_html_e( 'ブロックを追加', 'mno-post-manager' ); ?></button>
         </div>
     </section>
 
